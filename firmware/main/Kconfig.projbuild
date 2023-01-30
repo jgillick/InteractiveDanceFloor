@@ -1,0 +1,26 @@
+menu "Wifi Configuration"
+  config WIFI_SSID
+    string "WiFi SSID"
+    default "myssid"
+    help
+        SSID (network name) for the example to connect to.
+
+config WIFI_PASSWORD
+    string "WiFi Password"
+    default "password"
+    help
+      WiFi password (WPA or WPA2) for the example to use.
+
+config WIFI_MAX_RETRY
+    int "Maximum retry"
+    default 5
+    help
+      Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+endmenu
+menu "Host Configuration"
+  config DISCO_HOST_DOMAIN
+    string "Host Server Domain Name"
+    default "disco.local"
+    help
+        The domain name that the host software is running on.
+endmenu

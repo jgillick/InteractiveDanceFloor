@@ -1,0 +1,9 @@
+build
+
+sdkconfig*
+!sdkconfig.defaults
+
+managed_components
+
+server_certs
+
