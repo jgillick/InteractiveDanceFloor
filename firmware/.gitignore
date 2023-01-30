@@ -5,5 +5,5 @@ sdkconfig*
 
 managed_components
 
-server_certs
-
+server_certs/*
+!server_certs/localtunnel.pem

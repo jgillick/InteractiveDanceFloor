@@ -16,8 +16,8 @@
 #define HTTP_OUTPUT_BUFFER 512
 
 static const char *TAG = "OTA Update";
-extern const uint8_t server_cert_pem_start[] asm("_binary_ca_cert_pem_start");
-extern const uint8_t server_cert_pem_end[] asm("_binary_ca_cert_pem_end");
+extern const uint8_t server_cert_pem_start[] asm("_binary_host_cert_pem_start");
+extern const uint8_t server_cert_pem_end[] asm("_binary_host_cert_pem_end");
 
 esp_err_t check_for_upgrade(char **upgrade_path) {
   // Construct URL path with the app version
