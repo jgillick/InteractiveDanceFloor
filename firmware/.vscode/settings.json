@@ -33,6 +33,8 @@
     "utility": "c",
     "esp_app_desc.h": "c",
     "string": "c",
-    "string_view": "c"
+    "string_view": "c",
+    "event_groups.h": "c",
+    "esp_netif.h": "c"
   }
 }

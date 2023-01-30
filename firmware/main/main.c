@@ -4,6 +4,7 @@
 #include "esp_app_desc.h"
 #include "esp_event.h"
 #include "esp_log.h"
+#include "esp_mac.h"
 #include "esp_netif.h"
 #include "esp_system.h"
 #include "esp_websocket_client.h"
@@ -13,6 +14,31 @@
 #include "wifi.h"
 
 static const char *TAG = "Main";
+
+esp_err_t print_mac_address(void) {
+  uint8_t mac[6];
+  if (esp_base_mac_addr_get(mac) != ESP_OK) {
+    esp_efuse_mac_get_default(mac);
+  }
+  const size_t maclen = sizeof(mac);
+
+  char *macStr = malloc(19);
+  if (!macStr) {
+    ESP_LOGE(TAG, "Failed to allocate memory for mac address");
+    return ESP_FAIL;
+  }
+
+  // Create a string containing a hex representation of the mac address
+  char *p = macStr;
+  for (size_t i = 0; i < maclen; i++) {
+    p += sprintf(p, "%.2x", mac[i]);
+    strncat(":", p, 1);
+    p++;
+  }
+
+  ESP_LOGI(TAG, "Mac address: %s", macStr);
+  return ESP_OK;
+}
 
 void app_main(void) {
   ESP_LOGI(TAG, "Startup...");
@@ -33,12 +59,16 @@ void app_main(void) {
   app_desc = esp_app_get_description();
 
   ESP_LOGI(TAG, "Program starting (ver: %s)", app_desc->version);
-  // ESP_LOGI(TAG, "We upgraded brah!");
+  print_mac_address();
 
+  // Connect to wifi
   ESP_ERROR_CHECK(wifi_connect());
+
+  // Check for firware updaets
   ESP_ERROR_CHECK(init_ota_upgrade());
+
+  // Connect to web sockets
   // websocket_start();
-  // http_request();
 
   while (1) {
   }
