@@ -7,7 +7,7 @@
   <body>
     <button id="btn">Uknown</button>
     <script>
-      const ws = new WebSocket("ws://localhost:3000");
+      const ws = new WebSocket("wss://disco.local");
       const btn = document.getElementById("btn");
 
       ws.addEventListener("open", () => {

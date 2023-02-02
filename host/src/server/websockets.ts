@@ -1,14 +1,15 @@
-import { Express } from "express";
-import expressWs from "express-ws";
-import { WebSocket } from "ws";
+import http from "http";
+import https from "https";
+import { WebSocket, WebSocketServer } from "ws";
 
 let state = 0;
 
-export function initWebSockets(app: Express) {
-  const webservice = expressWs(app);
+export function initWebSockets(server: https.Server | http.Server) {
+  const wss = new WebSocketServer({ server });
 
-  webservice.app.ws("/", (ws) => {
+  wss.on("connection", (ws) => {
     // New client
+    console.log("New client");
     ws.send(String(state), { binary: false });
 
     ws.on("message", (data) => {
@@ -21,8 +22,7 @@ export function initWebSockets(app: Express) {
 
         state = toggled;
 
-        const clients = webservice.getWss().clients;
-        clients.forEach((client) => {
+        wss.clients.forEach((client) => {
           if (client.readyState === WebSocket.OPEN) {
             client.send(String(state), { binary: false });
           }
@@ -30,5 +30,4 @@ export function initWebSockets(app: Express) {
       }
     });
   });
-  console.log("🔌 WebSockets started");
 }

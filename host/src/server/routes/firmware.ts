@@ -10,12 +10,20 @@ const VERSION_LEN = 5;
 /**
  * Read the firmware version from the file
  */
-async function getFirmwareVersion(): Promise<string> {
-  const filepath = path.join(__dirname, FIRMWARE_PATH);
+export async function getFirmwareVersion(): Promise<string | null> {
+  const filepath = path.join(__dirname, "../../..", FIRMWARE_PATH);
   const buffer = Buffer.alloc(VERSION_LEN);
+  let version: string | null = null;
+
+  // Check if the file exists and can be read
+  try {
+    await fs.access(filepath, fs.constants.R_OK);
+  } catch (error) {
+    console.warn("No firmware file present");
+    return null;
+  }
 
   let fd;
-  let version = "";
   try {
     fd = await fs.open(filepath, "r");
     await fd.read(buffer, 0, VERSION_LEN, VERSION_OFFSET);
@@ -34,7 +42,7 @@ async function getFirmwareVersion(): Promise<string> {
  * If the version query is less than the latest firmware, it redirects to the firmware file.
  * Otherwise it returns status 200.
  */
-export const getFirmware = async (req: Request, res: Response) => {
+export const getFirmwareRoute = async (req: Request, res: Response) => {
   const versionParam = req.query.version;
   const appVersion = await getFirmwareVersion();
 
