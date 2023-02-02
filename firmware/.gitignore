@@ -7,3 +7,5 @@ managed_components
 
 server_certs/*
 !server_certs/localtunnel.pem
+
+.vscode/settings.json

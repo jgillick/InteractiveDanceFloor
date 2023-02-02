@@ -16,27 +16,13 @@
 static const char *TAG = "Main";
 
 esp_err_t print_mac_address(void) {
-  uint8_t mac[6];
+  uint8_t mac[6] = {0};
   if (esp_base_mac_addr_get(mac) != ESP_OK) {
     esp_efuse_mac_get_default(mac);
   }
-  const size_t maclen = sizeof(mac);
+  ESP_LOGI(TAG, "MAC address: %.2X:%.2X:%.2X:%.2X:%.2X:%.2X", mac[0], mac[1],
+           mac[2], mac[3], mac[4], mac[5]);
 
-  char *macStr = malloc(19);
-  if (!macStr) {
-    ESP_LOGE(TAG, "Failed to allocate memory for mac address");
-    return ESP_FAIL;
-  }
-
-  // Create a string containing a hex representation of the mac address
-  char *p = macStr;
-  for (size_t i = 0; i < maclen; i++) {
-    p += sprintf(p, "%.2x", mac[i]);
-    strncat(":", p, 1);
-    p++;
-  }
-
-  ESP_LOGI(TAG, "Mac address: %s", macStr);
   return ESP_OK;
 }
 
@@ -68,8 +54,5 @@ void app_main(void) {
   ESP_ERROR_CHECK(init_ota_upgrade());
 
   // Connect to web sockets
-  // websocket_start();
-
-  while (1) {
-  }
+  websocket_start();
 }
